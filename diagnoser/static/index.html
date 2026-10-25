@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System Diagnoser</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>System Diagnoser</h1>
+  <nav><a class="tab active" href="#memory">Memory</a></nav>
+  <div class="controls">
+    <span id="updated" class="muted"></span>
+    <label><input type="checkbox" id="auto" checked> Auto-refresh</label>
+    <button id="refresh">Refresh</button>
+  </div>
+</header>
+
+<main id="memory">
+  <p id="error" class="error" hidden></p>
+
+  <section class="tiles">
+    <div class="tile"><div class="label">Physical memory</div><div class="value" id="t-total">–</div></div>
+    <div class="tile"><div class="label">Memory used</div><div class="value" id="t-used">–</div><div class="sub" id="t-used-sub"></div></div>
+    <div class="tile"><div class="label">Swap used</div><div class="value" id="t-swap">–</div><div class="sub" id="t-swap-sub"></div></div>
+    <div class="tile"><div class="label">Memory pressure</div><div class="value" id="t-pressure">–</div><div class="sub" id="t-pressure-sub"></div></div>
+  </section>
+
+  <section class="card">
+    <h2>Physical memory</h2>
+    <div class="stack" id="ram-bar"></div>
+    <ul class="legend" id="ram-legend"></ul>
+  </section>
+
+  <section class="card">
+    <h2>Swap</h2>
+    <div class="stack" id="swap-bar"></div>
+    <ul class="legend" id="swap-legend"></ul>
+    <p class="note" id="swap-note"></p>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>What occupies it</h2>
+      <div class="controls">
+        <input type="search" id="filter" placeholder="Filter by name or user">
+        <label><input type="checkbox" id="group" checked> Group by app</label>
+      </div>
+    </div>
+    <ul class="legend">
+      <li><span class="key" style="background:var(--resident)"></span>Resident in RAM</li>
+      <li><span class="key" style="background:var(--compressed)"></span>Compressed or swapped out</li>
+    </ul>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-sort="label">Name</th>
+            <th data-sort="count" class="num">Procs</th>
+            <th class="bar-col"></th>
+            <th data-sort="footprint" class="num">Footprint</th>
+            <th data-sort="resident" class="num">Resident</th>
+            <th data-sort="compressed" class="num">Compressed / swap</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="note">Footprint is what Activity Monitor calls Memory: the process's dirty memory,
+      whether resident, compressed or swapped. macOS does not report swap per process; the
+      compressed column includes any of the process's compressed pages the system has moved to swap.</p>
+  </section>
+</main>
+
+<div id="tip" role="tooltip" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>
